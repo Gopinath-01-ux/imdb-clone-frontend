@@ -17,6 +17,7 @@ const Navbar = () => {
   const navItems = [
     { label: 'Movies', path: '/movies' },
     { label: 'Top Rated', path: '/top-rated' },
+    { label: 'Favorite Actors', path: '/favorite-actor'},
     { label: 'Coming Soon', path: '/coming-soon' },
   ];
 

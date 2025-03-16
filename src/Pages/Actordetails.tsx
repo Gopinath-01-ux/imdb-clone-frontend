@@ -1,7 +1,8 @@
-import { div } from "framer-motion/client";
-import { Award, Instagram, Star, Twitter, Heart } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+  import { Award, Instagram, Star, Twitter, Heart } from "lucide-react";
+import React, { useContext  } from "react";
 import { Link, useParams } from "react-router-dom";
+import { FavoriteContext } from "./FavoritesContext.tsx";
 
 const Actordetails = () => {
   const actors = [
@@ -159,23 +160,8 @@ const Actordetails = () => {
   const { id } = useParams();
   const actor = actors.find((m) => m.id === Number(id)) || actors[0];
 
-  const storageKey = `favorite-actor-${actor.id}`;
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  // Load favorite status from localStorage
-  useEffect(() => {
-    const storedFavorite = localStorage.getItem(storageKey);
-    if (storedFavorite !== null) {
-      setIsFavorite(JSON.parse(storedFavorite));
-    }
-  }, [id]); // Run effect when actor ID changes
-
-  // Save favorite status to localStorage
-  useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(isFavorite));
-  }, [isFavorite, storageKey]);
-
-  console.log(storageKey)
+  const { favorites, toggleFavorite } = useContext(FavoriteContext)!;
+  const isFavorite = favorites.some((fav) => fav.id === actor?.id);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -196,12 +182,21 @@ const Actordetails = () => {
             <div>
               <h1 className="text-4xl font-bold mb-4">{actor.name}</h1>
               <div className="flex items-center gap-6">
+                 {/* Implement a feature that allows users to "favorite" actors by clicking a 
+                 heart icon on each actor's profile. When a user favorites an actor, the selection
+                  should be stored persistently using local storage or a database. 
+                  Ensure the heart icon updates dynamically with a smooth animation using 
+                  Framer Motion when toggled. */}
                 <div className="flex items-center gap-2">
-                  <button onClick={() => setIsFavorite(!isFavorite)}>
-                    <Heart
-                      className={`w-5 h-5 ${isFavorite ? "text-red-500 fill-red-500" : "text-gray-400"}`}
-                    />
-                  </button>
+                <button onClick={() => toggleFavorite(actor)}>
+                  <motion.div
+                    animate={{ scale: isFavorite ? 1.2 : 1, color: isFavorite ? "#ef4444" : "#9ca3af" }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <Heart className="w-6 h-6" />
+                  </motion.div>
+                </button>
                   <span>Favorite</span>
                 </div>
                 <div className="flex items-center gap-2">
